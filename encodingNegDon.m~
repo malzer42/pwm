@@ -1,0 +1,157 @@
+% encodingNegDon.m: script to encode the sequences containing the negative donor sites
+% Sequences in the input file negDon.txt contain negative GTs and other nucleotides
+% that is why I have named the file negDon.txt
+% The script read the input file one sequence at a time and then scan the sequence by a window of two nucleotides 
+% every dinucleotide is replaced by it properties eg. a sequence AACCGT of length 6 will be scanned as aa, ac, cc, cg and gt.
+% then aa will be encoded by it 125 properties, ac, cc, and gt as well
+% the outcome encode sequence will be a sequence of successive 125 values of properties of each dinucleotides in the sequence
+% for the sequence AACCGT we will have a vector of 5*125 = 625 elements where 5 is the number of dinucleotides in this sequence
+% and 125 is the number of properties
+% Programmer : Pierre Abraham Mulamba
+% @KAUST, Apr 18 3:40 PM
+
+% open the sequenceGT.tx
+finID = fopen('negTestDon.txt', 'rt'); % open the input file and save it id as finID
+
+% open input file error check
+if(finID == -1)
+    error('File does not exist');
+end
+
+load totalNegPos
+disp('Call of dinuclPhysChem')
+dinuclPhysChem; % call dinuclPhysChem.m script to load the dinucleotides physical and chemical properties table
+
+seq = fgetl(finID); % read the first sequence from the input file and assing it to the variable seq
+seqLength = length(seq); % get the length of the sequence in the seq variable and assign the length in the variable seqLength
+[ROWS, COLS] = size(dipro(1:end,1)); % ROWS is the total number of properties -- 125. Cols is the number of dinucleotides -- 16
+
+nbrOfSeqs = negGT; % number of sequences in the input file obtained from the run of the script extractNegPosSite.m
+
+matNegTestDonCode = zeros(nbrOfSeqs ,  ROWS * (seqLength - 1) ); % pre-allocate memory to hold the encoded sequences with 125 dinucleotides properties
+
+i = 1; % counter of the sequences in the input file
+
+disp('START ENCODING THE SEQUENCES FROM THE INPUT FILE negTestDon.txt')
+%fprintf(1, '\nsequence: %d : ' , i)
+% section: Scanning each sequence from the input file by a sliding window of size 2 and replacing each dinucleotide by a vector of its 125 values of 
+% thermodynamic, structural and other dinucleotides properties
+while ischar(seq)
+    for j = 1 : seqLength - 1 % j iterates the sequence character by character
+        %TEST = test(j)
+        k = (j - 1) * ROWS + 1; % variable k indicates the starting point of the vector of properties of each dinucleotides
+        switch seq(j) % identify the nucleotide at position j
+            case 'A'  % nucleotide at position j is A
+                switch seq(j+1) % identify the nucleotide @ position j+1
+                    case 'A' % nucleotide at postion j+1 is A
+                        matNegTestDonCode(i , k : k + ROWS - 1) = aa'; %dinucleotide AA @ position j,j+1. Assign the vector aa in the matrix matGTcode
+                    case 'C' % nucleotide @ position j+1 is C
+                        matNegTestDonCode(i , k : k + ROWS - 1) = ac'; %dinculeotide AC @ position j,j+1. Assign the vector ac to the matrix matGTcode
+                    case 'G' % nucleotide @ position j+1 is G
+                        matNegTestDonCode(i , k : k + ROWS - 1) = ag'; %dinculeotide AG @ position j,j+1. Assign the vector ag to the matrix matGTcode
+                    case 'T' % nucleotide @ position j+1 is T
+                        matNegTestDonCode(i , k : k + ROWS - 1) = at'; %dinculeotide AT @ position j,j+1. Assign the vector at to the matrix matGTcode
+                    otherwise
+                        disp('case A completed') % the 4 dinucleotides with nucleotide A @ position j, and @ position j+1 we have A, C, G, or T
+                end
+            case 'C' % nucleotide at position j is C
+                switch seq(j+1) % identify the nucleotide @ position j+1
+                    case 'A' % nucleotide @ position j+1 is A
+                        matNegTestDonCode(i , k : k + ROWS - 1) = ca';
+                    case 'C' % nucleotide @ position j+1 is C
+                        matNegTestDonCode(i , k : k + ROWS - 1) = cc';
+                    case 'G' % nucleotide @ position j+1 is G
+                        matNegTestDonCode(i , k : k + ROWS - 1) = cg';
+                    case 'T' % nucleotide @ position j+1 is T
+                        matNegTestDonCode(i , k : k + ROWS - 1) = ct';
+                    otherwise
+                        disp('case C completed') % the 4 dinucleotides with nucleotide C @ position j, and @ position j+1 we have A, C, G, or T
+                end
+            case 'G' % nucleotide at position j is G
+                switch seq(j+1) % identify the nucleotide @ position j+1
+                    case 'A' % nucleotide @ position j+1 is A
+                        matNegTestDonCode(i , k : k + ROWS - 1) = ga';
+                    case 'C' % nucleotide @ position j+1 is C
+                        matNegTestDonCode(i , k : k + ROWS - 1) = gc';
+                    case 'G' % nucleotide @ position j+1 is G
+                        matNegTestDonCode(i , k : k + ROWS - 1) = gg';
+                    case 'T' % nucleotide @ position j+1 is T
+                        matNegTestDonCode(i , k : k + ROWS - 1) = gt';
+                    otherwise
+                        disp('case G completed') % the 4 dinucleotides with nucleotide G @ position j, and @ position j+1 we have A, C, G, or T
+                end
+            case 'T' % nucleotide at position j is T
+                switch seq(j+1) % identify the nucleotide @ position j+1
+                    case 'A' % nucleotide @ position j+1 is A
+                        matNegTestDonCode(i , k : k + ROWS - 1) = ta';
+                    case 'C' % nucleotide @ position j+1 is C
+                        matNegTestDonCode(i , k : k + ROWS - 1) = tc';
+                    case 'G' % nucleotide @ position j+1 is G
+                        matNegTestDonCode(i , k : k + ROWS - 1) = tg';
+                    case 'T' % nucleotide @ position j+1 is T                   
+                        matNegTestDonCode(i , k : k + ROWS - 1) = tt';
+                    otherwise
+                        disp('case T completed') % the 4 dinucleotides with nucleotide T @ position j, and @ position j+1 we have A, C, G, or T
+                end
+        end
+    end
+    i = i+1;
+    seq = fgetl(finID);
+end
+clear aa ac ag at ca cc cg ct ga gc gg gt ta tc tg tt COLS ROWs dipro finID i j k nbrOfSeqs seq seqLength ROWS
+clear posAG posGT negAG
+save matNegTestDonCode
+disp('Encoding the sequences completed successufully')
+disp('The Endoded formatted data of the sequences from the input file are in matNegTestDonCode')
+clear matNegTestDonCode negGT
+% % section: clear the variables to release memory
+% %clear aa ac ag at ca cc cg ct ga gc gg gt ta tc tg tt;
+% clear i j k seq seqLength nbrOfSeqs COLS ROWS;
+% fclose(finID); clear finID;
+% 
+% [rows,cols] = size(matNegTestDonCode);
+% %u = 1 : 15 : 901; 
+% %v = 15 : 15 : 915;
+% windowsize = 125;
+% w = window(windowsize , cols);
+% %w = [u ; v]'; % window
+% Factor = 1:62;
+% tmpProxiF = 1 - abs(1 - 2*Factor/62);
+% proximityFactor = 1 - abs(1 - 2*Factor/62); % proximity factor
+% %proximityFactor = [tmpProxiF(31:62) , tmpProxiF(1:30)];
+% 
+% row1 = matNegTestDonCode(1,1:end); % take the first sequence of matPosDoncode for testing with the multiplication of the proximity factor
+% %row1F = 0;% variable to hold the the modified row1 affected by the proximity factor
+% %
+% %
+% %for m = 1 : 61
+% %   p = proximityFactor(m); % proximityFactor(1) , ..., proximityFactor(61)
+% %  tmp = p.*row1(w(m,1):w(m,2)); % proximityFactor(m) .* all components of a window of row1
+% % row1F = [row1F , tmp , ]; % at the end of the loop the row1F vector is egal to the row1 with each component multiply by the proximity factor
+% %end
+% 
+% TT = proximity(row1 , proximityFactor , w); % the loop above was replaced by the proximity function which mutliply a vector component by proximity factor
+% 
+% % section : creating the matrix to hold the modified matPosDoncode multiply with the proximity factor
+% 
+% proxiMatNegDonCode = zeros(rows , cols); % pre-allocation of memory to the matrix that will hold the matPosDoncode affected by the proximity factor
+% 
+% for i = 1 :rows
+%     tmp = proximity(matNegTestDonCode(i,1:end) , proximityFactor ,w);
+%     proxiMatNegDonCode(i,1:end) = tmp;
+% end
+% 
+% % section: Labelling the data of proxiMatPosDonCode and assigning it to a class
+% %class1 = ones(rows,1);
+% label = -1 .* ones(rows,1);
+% 
+% proxiMatNegDonCode = [proxiMatNegDonCode , label];
+% 
+% clear tmp i rows cols windowsize Factor label row1 TT matNegDoncode w proximityFactor ans tmpProxiF
+% % section: saving the formatted data
+% save LabelProxiMatNegDonCode.mat proxiMatNegDonCode; % saving the matGTcode in a formatted format
+% clear proxiMatNegDonCode; % comment this line to keep the matGTcode in the memory
+% 
+% % section: saving the formatted data
+% %save matNegDoncode; % saving the matGTcode in a formatted format
+% %clear matNegDoncode; % comment this line to keep the matGTcode in the memory

@@ -1,0 +1,15 @@
+import os
+import subprocess
+
+log_ext = 'log'
+
+for f in os.listdir():
+    f_name, f_ext = os.path.splitext(f)
+    f_name = f_name.strip()
+    f_ext = f_ext.strip()
+    if f_ext == 'txt':
+        result_file = '{}.{}'.format(f_name, log_ext)
+        subprocess.call("./xpos_weight_mat posDon.txt  f result_file")
+    else:
+        print('{}'.format(f))
+        
