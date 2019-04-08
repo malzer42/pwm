@@ -21,11 +21,14 @@ endif
 
 # ------- Source Files are Listed Here ---------------------------
 
-SOURCES = pos_weight_mat.cpp sum.pp title.cpp message.cpp printVector.cpp
+SOURCES = pos_weight_mat.cpp argument.cpp sum.pp \
+		  title.cpp message.cpp printVector.cpp matrix.cpp \
+		  print.cpp pwm.cpp position.cpp
 
 # ------- Object Files are the same as Sources -------------------
 
-OBJS    = pos_weight_mat.o sum.o title.o message.o printVector.o
+OBJS    = pos_weight_mat.o argument.o sum.o title.o message.o \
+	      printVector.o matrix.o print.o pwm.o position.o
 
 # ------- Compiler flags and things ------------------------------
 
@@ -66,7 +69,7 @@ CODE1    = # -march=pentium
 CFLAGS =  ${OPTIMIZE} ${DEBUG}  ${WARNINGS} ${BOUNDS} ${PROFILE} \
           ${FLOAT0}   ${FLOAT1} ${FLOAT2}   ${CODE0}  ${CODE1} ${FAST}
 # CC = gcc-3.3 -Wno-deprecated # -fguiding-decls
-CC = g++-7 -Wno-deprecated # -fguiding-decls
+CC = g++-7 -std=c++17 -Wno-deprecated # -fguiding-decls
 O  = .o
 
 %.o: %.cpp
@@ -97,11 +100,13 @@ title$(O) : title.cpp title.h
 message$(O) : message.cpp message.h 
 
 printVector$(O) : printVector.cpp  printVector.h 
-#
-#x2root$(O) : x2root.c quadratic.h
-#
-#max$(O) : max.c quadratic.h
-#
-#min$(O) : min.c quadratic.h
-#
-#negatifdelta$(O) : negatifdelta.c quadratic.h
+
+argument$(O) : argument.cpp argument.h
+
+matrix$(O) : matrix.cpp matrix.h
+
+print$(O) : print.cpp print.h
+
+pwm$(O) : pwm.cpp pwm.h
+
+position$(O): position.cpp position.h

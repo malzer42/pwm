@@ -6,3 +6,6 @@ REPORTS
 mfolder
 matfolder
 MATPOSDONUPDW
+*.dat
+*.cpp~
+*.h~
