@@ -22,12 +22,12 @@ endif
 # ------- Source Files are Listed Here ---------------------------
 
 SOURCES = pos_weight_mat.cpp argument.cpp sum.pp \
-		  title.cpp message.cpp printVector.cpp matrix.cpp \
+		  title.cpp message.cpp printVector.cpp matrix.cpp split.cpp \
 		  print.cpp pwm.cpp position.cpp threshold.cpp factor.cpp version.cpp
 
 # ------- Object Files are the same as Sources -------------------
 
-OBJS    = pos_weight_mat.o argument.o sum.o title.o message.o \
+OBJS    = pos_weight_mat.o argument.o sum.o title.o message.o split.o\
 	      printVector.o matrix.o print.o pwm.o position.o threshold.o factor.o version.o
 
 # ------- Compiler flags and things ------------------------------
@@ -116,3 +116,5 @@ threshold$(O): threshold.cpp threshold.h
 factor$(O): factor.cpp factor.h
 
 version$(O): version.cpp version.h
+
+split$(O): split.cpp split.h

@@ -4,14 +4,16 @@
     @KAUST, Sat May 7, 2011, 01:05
     Last updated: Oct 10, 2011, 2:42.
     Bugs: The consensus sequence and the rate consensus sequence are not correct.
-    To be done: 1.Fix the consensus_seq and the rate_cons_seq, 2. Implement the sliding windows,
-    3.Compute the Information content for each position, 4. compute the pos_weight_mat based on the pos_freq_mat
+    To be done: 1.Fix the consensus_seq and the rate_cons_seq,
+    2. Implement the sliding windows,
+    3.Compute the Information content for each position, 
+    4. compute the pos_weight_mat based on the pos_freq_mat
 
     Usage: ./xpos_weight_matrix inputfilename1 inputfilename2 outputfilename
     example: ./xpos_weight_matrix nucleotide.seq nucleotide1.seq result
-    where: nucleotide.seq is the input file 1 containing the sequences to be processed to create the pwm
-    nucleotide1.seq is the input file 2 containing the sequence to be scanned
-    result is the outputfilename
+    where: nucleotide.seq is the input file 1 containing the sequences to be processed 
+    to create the pwm  nucleotide1.seq is the input file 2 containing the sequence 
+    to be scanned  result is the outputfilename
 
     Code for implementing the sliding windows
     vector< string > window[number_of_windows];
@@ -45,8 +47,8 @@ int main(int argc , char *argv[])
 {
   //section: Variables used to hold the version of the program , the name of the executable
 
-  std::string prog = argv[0];								// prog = ./xpos_weight_mat ie it contains the . and / character
-  std::string prog1(prog, 1, prog.size());					// prog1 = xpos_weight_mat ie the . and / characters are removed
+  std::string prog = argv[0];	// prog = ./xpos_weight_mat ie it contains the . and / character
+  std::string prog1(prog, 1, prog.size());	// prog1 = xpos_weight_mat ie the . and / characters are removed
   std::time( &currentTime ); // store time in currentTime
 
   try{
@@ -55,9 +57,7 @@ int main(int argc , char *argv[])
     system("clear");
     
     std::cout << std::asctime( std::localtime( &currentTime ) );
-    
     Title theTitle(prog1 , getVersion());
-
     Message aMessage("Program to Analyse DNA Sequences and Produce Statistics");
         
     std::ifstream fin1;
@@ -74,26 +74,28 @@ int main(int argc , char *argv[])
     unsigned int lengthSeqInputFile = 0;
     lengthSeqInputFile = (*nucleotides.begin()).length() ;
     
+    std::cout << std::setw(105) << "The Number of Sequences in the file " << argv[1] << " is :"
+	      << nSeqInputFile << '\n';
+    std::cout << std::setw(107) << "The Length of each sequence in the file " << argv[1] << " is : "
+	      << lengthSeqInputFile  <<"\n\n";
     
-    
-    std::cout << std::setw(105) << "The Number of Sequences in the file " << argv[1] << " is :" << nSeqInputFile << '\n';
-    std::cout << std::setw(107) << "The Length of each sequence in the file " << argv[1] << " is : " << lengthSeqInputFile  <<"\n\n";
-    
-    /*	section: computation -- counting the number of nucleotides a, c, g, and t at each position or column of the matrix nucleotides and creating
-	the position frequency matrix (pos_freq_mat) of dimensions  BASE_NBR x COL: COL is the number of position and BASE_NBR is the number of base:4
-	pos_freq_mat is a std::vector of std::vectors[The C++ Programming Language, Special ed. pp 836-837]
+    /*	section: computation -- counting the number of nucleotides a, c, g, and t at each position or 
+	column of the matrix nucleotides and creating the position frequency matrix (pos_freq_mat) 
+	of dimensions  BASE_NBR x COL: COL is the number of position and BASE_NBR is the number 
+	of base:4 pos_freq_mat is a std::vector of std::vectors[The C++ Programming Language, 
+	Special ed. pp 836-837]
     */
     std::vector<std::vector<int>> pos_freq_mat = create_pwm(nucleotides);
     print(pos_freq_mat);
 
     nucleotides.clear();
         
-    /*	section: computing total number of observations -- the sum of all nucleotides occurences in a column or position
-	this sum is used in the transformation of the position frequency matrix to position weight matrix
+    /*	section: computing total number of observations -- the sum of all nucleotides occurences in a column 
+	or position this sum is used in the transformation of the position frequency matrix to position weight matrix
     */
 
     std::vector<int> total_pos = compute_total_position(pos_freq_mat, lengthSeqInputFile);
-    
+    std::cout << "The number of total_pos is " << total_pos.size();
     // Section: create a site_specific_scoring_matrix based on the pos_freq_mat and total_pos
     
     std::vector< std::vector < double> > site_spec_scoring_mat(base.size() , std::vector<double> (lengthSeqInputFile));
@@ -115,10 +117,6 @@ int main(int argc , char *argv[])
       }
     }
 
-    
-    
-    
-    
     /*	section: find the maximum value at each std::vector colum (position) of the matrix pfm then locate the nucleotide
 	that has the high frequency in that column then create the consensus sequence and the common consensus sequence
 	After finding the consensus sequence (cs) and the common consensus sequence (ccs) we compute the score of  cs and ccs
@@ -171,15 +169,22 @@ int main(int argc , char *argv[])
     */
     //	section: Creating a matrix containing all sequences of the input file 2
     
-    std::ifstream fin2;										//file input 2
+    std::ifstream fin2;				//file input 2
     fin2.open(argv[2] , std::ifstream::in);
     check_file_opened(fin2);
     std::vector< std::string > windows = create_nucleotides_matrix(fin2);
+    fin2.close();
 
-    std::cout << setw(105) << "The Number of Sequences in the file " << argv[2] << " is :" << windows.size() << '\n';
-    std::cout << setw(107) << "The Length of each sequence in the file " << argv[2] << " is : " << (*windows.begin()).size() << '\n'<< '\n';
+    unsigned int nSeqWindows = 0;
+    nSeqWindows = windows.size();
+
+    unsigned int lengthSeqWindows = 0;
+    lengthSeqWindows = (*windows.begin()).length();
+    
+    std::cout << setw(105) << "The Number of Sequences in the file " << argv[2] << " is :" << nSeqWindows << '\n';
+    std::cout << setw(107) << "The Length of each sequence in the file " << argv[2] << " is : " << lengthSeqWindows << '\n'<< '\n';
     std::cout << setw(111) << "The Number of sliding windows per line in file "
-	      << argv[2] << " is : " << (*windows.begin()).size() - lengthSeqInputFile +1
+	      << argv[2] << " is : " << lengthSeqWindows - lengthSeqInputFile +1
 	      << '\n' << '\n';
 
     std::cout << setw(170)
@@ -187,21 +192,21 @@ int main(int argc , char *argv[])
         
     //	section: save the result in an output file
     //Message("Secton to Display The Position Frequency Matrix");
-    char *outfile = new char[strlen(argv[3])+1];
-    strcpy(outfile , argv[3]);
-    //[3];
-    //const char *ext =".txt";
-    //strcat(outfile,ext);
+    auto[f_name, f_ext] = split(argv[2]);
+    std::string outfile = f_name+".log";
     ofstream fout;
     fout.exceptions( ofstream::failbit | ofstream::badbit);
     fout.open(outfile , ios::app);
     fout << '#' <<asctime( localtime( &currentTime ) );// << '\n' << '#' << '\n';
     fout << '#' << setw(105) << "The Number of Sequences in the file " << argv[1] << " is :" << nSeqInputFile << '\n';
-    fout << '#' << setw(107) << "The Length of each sequence in the file " << argv[1] << " is : " << lengthSeqInputFile << '\n' << '#' << '\n';
-    fout << '#' << setw(105) << "The Number of Sequences in the file " << argv[2] << " is :" << windows.size() << '\n';
-    fout << '#' << setw(107) << "The Length of each sequence in the file " << argv[2] << " is : " << (*windows.begin()).size() << '\n' <<'#'<< '\n';
+    fout << '#' << setw(107) << "The Length of each sequence in the file " << argv[1] << " is : "
+	 << lengthSeqInputFile << '\n' << '#' << '\n';
+    fout << '#' << setw(105) << "The Number of Sequences in the file " << argv[2] << " is :"
+	 << windows.size() << '\n';
+    fout << '#' << setw(107) << "The Length of each sequence in the file " << argv[2] << " is : "
+	 << lengthSeqWindows << '\n' <<'#'<< '\n';
     fout << '#' << setw(111) << "The Number of sliding windows per line in file " << argv[2] << " is : "
-	 << (*windows.begin()).size() - lengthSeqInputFile +1
+	 << lengthSeqWindows - lengthSeqInputFile +1
 	 << '\n' <<'#' << '\n';
     fout << '#' << setw(170)
 	 << "The score value gives up an indication that the sequence has properties similar to those of the sequences used to derive the matrix"
@@ -245,8 +250,8 @@ int main(int argc , char *argv[])
 
     //section: creating sliding windows and saving the result in the output file
     ofstream score_out("score.dat");			//output file to hold the score  the values used to compute the score
-    unsigned int number_of_windows = ( (*windows.begin()).size() - lengthSeqInputFile ) +1;
-    for (unsigned int row = 0 ; row < windows.size(); row++) {
+    unsigned int number_of_windows = ( lengthSeqWindows - lengthSeqInputFile ) +1;
+    for (unsigned int row = 0 ; row < nSeqWindows; row++) {
       std::cout << '\n' << windows[row] << '\n';
       fout << '\n' << windows[row] << '\n';
       score_out << row+1 << '\t' ;
@@ -281,15 +286,15 @@ int main(int argc , char *argv[])
     }
 
     fout.close();
-
-    delete[] outfile;
     
     std::cout << '\n';
     std::cout << setw(120) << "The results is saved is the output file : "<< '\n' << '\n'
-	 << setw(100) <<  outfile << '\n' << '\n';
+	 << setw(100) << outfile << '\n' << '\n';
+    outfile.clear();
   }
   catch ( ofstream::failure e) {
-    cerr << setw(140) << "Output file could not be opened/was not provided as a second command line argument" << '\n' << '\n';
+    cerr << setw(140) << "Output file could not be opened/was not provided as a second command line argument"
+	 << '\n' << '\n';
   }
   catch ( ... ) {
     cerr << "Unknow expection thrown " << '\n';

@@ -4,6 +4,14 @@
    @KAUST, Sat May 7, 2011, 01:05
    Last updated; Mon Oct 10, 2011 , 02:42
 */
+
+/********************************************************************************
+                                   
+                                    Copyright (c) 2019 DTI, inc.
+                                    All rights reserved
+
+ ********************************************************************************/
+
 #ifndef POS_WEIGHT_MAT_H
 #define POS_WEIGHT_MAT_H
 
@@ -31,9 +39,7 @@
 #include "threshold.h"
 #include "factor.h"
 #include "version.h"
-
-
-
+#include "split.h"
 
 
 typedef std::vector<int>::const_iterator VI; 
