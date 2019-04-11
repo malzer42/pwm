@@ -28,6 +28,12 @@
 #include "print.h"
 #include "pwm.h"
 #include "position.h"
+#include "threshold.h"
+#include "factor.h"
+#include "version.h"
+
+
+
 
 
 typedef std::vector<int>::const_iterator VI; 
@@ -37,9 +43,6 @@ typedef std::vector<std::string>::const_iterator vsi; // vsi: vector string iter
 typedef std::string::const_iterator si;// si: string iterator
 
 const int INITIAL = 0;
-const double THRESHOLD = 0.0;
-const double FACTOR = 0.25;
-const std::string version = "20190401";
 std::time_t currentTime; // variable for storing time
 
 std::string base("acgt");					// equivalent to string base = "acgt" , holds the nucleotide a, c, g, and t

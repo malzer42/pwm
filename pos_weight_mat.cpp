@@ -56,7 +56,7 @@ int main(int argc , char *argv[])
     
     std::cout << std::asctime( std::localtime( &currentTime ) );
     
-    Title theTitle(prog1 , version);
+    Title theTitle(prog1 , getVersion());
 
     Message aMessage("Program to Analyse DNA Sequences and Produce Statistics");
         
@@ -109,7 +109,7 @@ int main(int argc , char *argv[])
     for (unsigned int row = 0; row < base.size();row++) {
       for (unsigned int col = 0 ; col <= lengthSeqInputFile - 1 ; col++ ) {
 	if (site_spec_scoring_mat.at(row).at(col) != 0.0 )
-	  log_odd_site_spec_scoring_mat.at(row).at(col) = log2((site_spec_scoring_mat.at(row).at(col))/FACTOR);
+	  log_odd_site_spec_scoring_mat.at(row).at(col) = log2((site_spec_scoring_mat.at(row).at(col))/getFactor());
 	else
 	  log_odd_site_spec_scoring_mat.at(row).at(col) = 0.0;
       }
@@ -266,7 +266,7 @@ int main(int argc , char *argv[])
 	  }
 
 	}
-	if (score >= THRESHOLD) {
+	if (score >= getThreshold()) {
 	  std::cout << "score :"  << setprecision(3) << score << "\t(+)" << '\n';
 	  fout << setprecision(3) << score << "\t(+)" << '\n';
 	  score_out << setprecision(3) <<  score << "\t(+)"<< '\n';
