@@ -40,6 +40,9 @@
 #include "factor.h"
 #include "version.h"
 #include "split.h"
+#include "site_spec.h"
+//#include "log_odd.h"
+
 
 
 typedef std::vector<int>::const_iterator VI; 

@@ -96,9 +96,9 @@ int main(int argc , char *argv[])
 
     std::vector<int> total_pos = compute_total_position(pos_freq_mat, lengthSeqInputFile);
     std::cout << "The number of total_pos is " << total_pos.size();
+
     // Section: create a site_specific_scoring_matrix based on the pos_freq_mat and total_pos
-    
-    std::vector< std::vector < double> > site_spec_scoring_mat(base.size() , std::vector<double> (lengthSeqInputFile));
+    std::vector< std::vector < double> > site_spec_scoring_mat (base.size() , std::vector<double> (lengthSeqInputFile));
     for (unsigned int  row = 0; row < base.size();row++) {
       for (unsigned int  col = 0 ; col <= lengthSeqInputFile  - 1 ; col++ ) {
 	site_spec_scoring_mat[row][col] = double ( pos_freq_mat[row][col]) / (total_pos[col]);
@@ -193,6 +193,7 @@ int main(int argc , char *argv[])
     //	section: save the result in an output file
     //Message("Secton to Display The Position Frequency Matrix");
     auto[f_name, f_ext] = split(argv[2]);
+    f_ext.clear();
     std::string outfile = f_name+".log";
     ofstream fout;
     fout.exceptions( ofstream::failbit | ofstream::badbit);
