@@ -36,6 +36,7 @@
 #include "pos_weight_mat.h"
 
 void check_file_opened(std::ifstream& fin){
+
   if(!fin){
     std::cerr << "Input file could not be opened /was not provided as a command line argument\n";
     exit(1);
@@ -194,10 +195,14 @@ int main(int argc , char *argv[])
     //Message("Secton to Display The Position Frequency Matrix");
     auto[f_name, f_ext] = split(argv[2]);
     f_ext.clear();
-    std::string outfile = f_name+".log";
+    
+    std::string path = "/media/pam/4EAC-F523/";
+    std::string outfile = path+f_name+".log";
     ofstream fout;
     fout.exceptions( ofstream::failbit | ofstream::badbit);
+
     fout.open(outfile , ios::app);
+    
     fout << '#' <<asctime( localtime( &currentTime ) );// << '\n' << '#' << '\n';
     fout << '#' << setw(105) << "The Number of Sequences in the file " << argv[1] << " is :" << nSeqInputFile << '\n';
     fout << '#' << setw(107) << "The Length of each sequence in the file " << argv[1] << " is : "

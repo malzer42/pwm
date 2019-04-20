@@ -1,14 +1,17 @@
 import os
+import sys
 import subprocess
 
-log_ext = '.log'
-input_file = 'posDon.txt'
+model_file = "data/posDon.txt" # file used to generate the position weight matrix model.
 
-for filename in os.listdir(os.getcwd()):
-    f_name, f_ext = os.path.splitext(filename)
+path = "data/"
+dirs = os.listdir(path)
+
+for i, file_name in enumerate(dirs):
+    f_name, f_ext = os.path.splitext(file_name)
     if f_ext == '.txt':
-        result_file = f_name+log_ext
-        proc = subprocess.Popen(["./xpos_weight_mat", input_file, filename, result_file])
-        proc.wait(1000)
+        input_file = "data/" + file_name
+        proc = subprocess.Popen(["./xpos_weight_mat", model_file, input_file])
+        proc.wait()
     else:
-        print('{}'.format(filename))
+        print('{}'.format(file_name))
